@@ -1,6 +1,6 @@
 {
   "name": "s3leveldown",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An implementation of LevelDOWN that uses Amazon S3. Turn your S3 bucket into a DB",
   "homepage": "https://github.com/loune/s3leveldown",
   "main": "s3leveldown.js",
@@ -8,7 +8,8 @@
     "test": "npm run lint && node ./test.js",
     "lint": "./node_modules/.bin/jshint s3leveldown.js"
   },
-  "author": "Loune Lam <l-npm@siphon9.net> (https://loune.net/)",
+  "author": ["Loune Lam <l-npm@siphon9.net> (https://loune.net/)",
+              "Anthony Ellison"],
   "keywords": [
     "leveldb",
     "leveldown",
@@ -18,7 +19,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/loune/s3leveldown.git"
+    "url": "https://github.com/aellison5505/s3leveldown.git"
   },
   "license": "MIT",
   "dependencies": {
