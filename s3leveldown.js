@@ -5,7 +5,8 @@ var inherits = require('inherits')
   , debug = require('debug')('S3LevelDOWN')
   , AWS = require('aws-sdk')
 
-var s3 = new AWS.S3({ apiVersion: '2006-03-01' })
+// move to open with options
+var s3;
 
 function lt(value) {
   return ltgt.compare(value, this._end) < 0
@@ -57,7 +58,7 @@ function S3Iterator (db, options) {
 
   if (!nullEmptyUndefined(self._start))
     self.startAfter = ltgt.lowerBoundInclusive(options) ? getStartAfterKey(self._start) : self._start
-    
+
   debug('new iterator %o', self._options)
 }
 
@@ -66,7 +67,7 @@ inherits(S3Iterator, AbstractIterator)
 S3Iterator.prototype._next = function (callback) {
   var self = this
 
-  if (self._done++ >= self._limit || 
+  if (self._done++ >= self._limit ||
     (self.data && self.dataUpto == self.data.length && !self.s3nextContinuationToken))
     return setImmediate(callback)
 
@@ -211,7 +212,14 @@ inherits(S3LevelDOWN, AbstractLevelDOWN)
 
 S3LevelDOWN.prototype._open = function (options, callback) {
   var self = this
-  setImmediate(function () { callback(null, self) })
+  AWS.config.update({
+      region: options.region,
+      credentials: options.credentials
+  });
+
+  this.s3 = new AWS.S3({ apiVersion: '2006-03-01' });
+
+  setImmediate(function () { callback(null, self) });
 }
 
 S3LevelDOWN.prototype._put = function (key, value, options, callback) {
