@@ -6,7 +6,7 @@ var inherits = require('inherits')
   , AWS = require('aws-sdk')
 
 // move to open with options
-var s3;
+
 
 function lt(value) {
   return ltgt.compare(value, this._end) < 0
@@ -217,7 +217,7 @@ S3LevelDOWN.prototype._open = function (options, callback) {
       credentials: options.credentials
   });
 
-  this.s3 = new AWS.S3({ apiVersion: '2006-03-01' });
+  s3 = new AWS.S3({ apiVersion: '2006-03-01' });
 
   setImmediate(function () { callback(null, self) });
 }

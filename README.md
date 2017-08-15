@@ -20,17 +20,41 @@ $ npm install levelup
 
 ## Example
 
-Please refer to the [AWS SDK docs to set up your API credentials](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html) before using.
+Please refer to the [AWS SDK docs to set up your API credentials](http://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html) before using. You can also pass an AWS credentials object.
+
 
 ```js
+
+AWS = require('aws-sdk');
+
+AWS_ACCESS_KEY_ID = 'XXXXXXXXXXXXXXXXXXXXXXXXXXX';  // Your Key Id
+AWS_SECRET_ACCESS_KEY = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'; //  Your Secret Access Key
+AWS_DEFAULT_REGION = 'us-east-1'; Your Region
+
+
+AWS_CREDENTIALS = new AWS.Credentials(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, sessionToken = null);
+
+// OR
+
+AWS_CREDENTIALS = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId : 'us-east-1:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', // your identity pool id here
+    Logins : {
+        // Change the key below according to the specific region your user pool is in.
+        'cognito-idp.us-east-1.XXXXXXXXXXXXXXXXXXXXXXXXXXXXX' : result.getIdToken().getJwtToken()
+    }
+});
+
 var levelup = require('levelup')
-  , db = levelup('my_bucket', { db: require('s3leveldown') })
+  , db = levelup('my_bucket', { db: require('s3leveldown'),
+                                region: AWS_DEFAULT_REGION,
+                                credentials: AWS_CREDENTIALS
+ })
 
 db.batch()
   .put('name', 'Pikachu')
   .put('dob', 'February 27, 1996')
   .put('occupation', 'Pokemon')
-  .write(function () { 
+  .write(function () {
     db.readStream()
       .on('data', console.log)
       .on('close', function () { console.log('Pika pi!') })
